@@ -92,7 +92,7 @@ namespace RESTNødopkald.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public HttpResponseMessage DeleteAll()
         {
             const string insertString = "DELETE FROM dbo.Nødopkald";
