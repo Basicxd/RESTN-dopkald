@@ -69,19 +69,23 @@ namespace RESTNødopkald.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody] Sensor value)
         {
-            const string insertString = "insert into dbo.Nødopkald (dato, tid, motion) values (@dato, @tid, @motion)";
-            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+            if (value.Motion == "intruder here")
             {
-                databaseConnection.Open();
-                using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
+                const string insertString = "insert into dbo.Nødopkald (dato, tid, motion) values (@dato, @tid, @motion)";
+                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
                 {
-                    insertCommand.Parameters.AddWithValue("@dato", value.Dato);
-                    insertCommand.Parameters.AddWithValue("@tid", value.Tid);
-                    insertCommand.Parameters.AddWithValue("@motion", value.Motion);
-                    int rowsAffected = insertCommand.ExecuteNonQuery();
-                    return new HttpResponseMessage(HttpStatusCode.OK);
+                    databaseConnection.Open();
+                    using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
+                    {
+                        insertCommand.Parameters.AddWithValue("@dato", value.Dato);
+                        insertCommand.Parameters.AddWithValue("@tid", value.Tid);
+                        insertCommand.Parameters.AddWithValue("@motion", value.Motion);
+                        int rowsAffected = insertCommand.ExecuteNonQuery();
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
                 }
             }
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
 
