@@ -4,6 +4,7 @@ namespace RESTNødopkald
 {
     public class Sensor
     {
+        public int Id { get; set; }
         public string Dato { get; set; }
         public string Tid { get; set; }
         public string Motion { get; set; }
