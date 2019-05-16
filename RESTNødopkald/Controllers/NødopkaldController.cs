@@ -69,7 +69,7 @@ namespace RESTNødopkald.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody] Sensor value)
         {
-            if (value.Motion == "intruder here")
+            if (value.Motion == "Intruders here")
             {
                 const string insertString = "insert into dbo.Nødopkald (dato, tid, motion) values (@dato, @tid, @motion)";
                 using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
