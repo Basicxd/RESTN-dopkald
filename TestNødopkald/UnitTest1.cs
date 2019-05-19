@@ -107,15 +107,15 @@ namespace TestNødopkald
             Assert.AreEqual(gettingTheFirstOne.Tid, "25:24:25");
         }
 
-        [ExpectedException(typeof(ArgumentException))]
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestingMyFilterForPOST()
         {
             Sensor newSensor = new Sensor("18/05/2019", "25:24:25", "This Make My Filter Work :)");
 
-            var some = AddCustomerAsync(newSensor);
-
-            AssertFailedException();
+            AddCustomerAsync(newSensor);
+           
+            Assert.Fail();
         }
 
     }

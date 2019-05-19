@@ -87,7 +87,7 @@ namespace RESTNødopkald.Controllers
                 
             }
 
-            throw new ArgumentException("Failed");
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
 
