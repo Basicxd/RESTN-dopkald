@@ -90,6 +90,30 @@ namespace RESTNødopkald.Controllers
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
+        [HttpPost]
+        public HttpResponseMessage PostNoFilter([FromBody] Sensor value)
+        {
+            if (value.Motion == "Intruders here")
+            {
+                const string insertString = "insert into dbo.Nødopkald2 (dato, tid, motion) values (@dato, @tid, @motion)";
+                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                {
+                    databaseConnection.Open();
+                    using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
+                    {
+                        insertCommand.Parameters.AddWithValue("@dato", value.Dato);
+                        insertCommand.Parameters.AddWithValue("@tid", value.Tid);
+                        insertCommand.Parameters.AddWithValue("@motion", value.Motion);
+                        int rowsAffected = insertCommand.ExecuteNonQuery();
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                }
+
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
 
         // PUT: api/Nødopkald/5
         [HttpPut("{id}")]
