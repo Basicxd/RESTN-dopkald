@@ -13,16 +13,16 @@ namespace RESTNødopkald.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NødopkaldController : ControllerBase
+    public class AlertController : ControllerBase
     {
         private string ConnectionString =
             "Server=tcp:basic1997.database.windows.net,1433;Initial Catalog=Nødopkald;Persist Security Info=False;User ID=basic;Password=Polo1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        
-        // GET: api/Nødopkald
-        [HttpGet(Name = "GetAllBooks")]
-        public IEnumerable<Sensor> GetAllBooks()
+
+        // GET: api/Alert
+        [HttpGet(Name = "GetAllAlert")]
+        public IEnumerable<Sensor> GetAllAlert()
         {
-            const string selectString = "select * from dbo.Nødopkald";
+            const string selectString = "select * from dbo.Nødopkald2";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
                 databaseConnection.Open();
@@ -33,7 +33,7 @@ namespace RESTNødopkald.Controllers
                         List<Sensor> sensorList = new List<Sensor>();
                         while (reader.Read())
                         {
-                            Sensor book = ReadBook(reader);
+                            Sensor book = ReadSensor(reader);
                             sensorList.Add(book);
                         }
                         return sensorList;
@@ -42,7 +42,7 @@ namespace RESTNødopkald.Controllers
             }
         }
 
-        private static Sensor ReadBook(IDataRecord reader)
+        private static Sensor ReadSensor(IDataRecord reader)
         {
             int id = reader.GetInt32(0);
             string dato = reader.IsDBNull(1) ? null : reader.GetString(1);
@@ -58,62 +58,42 @@ namespace RESTNødopkald.Controllers
             return sensor;
         }
 
-        //// GET: api/Nødopkald/5
+        //// GET: api/Alert/5
         //[HttpGet("{id}", Name = "Get")]
         //public string Get(int id)
         //{
         //    return "value";
         //}
 
-        // POST: api/Nødopkald
-        [HttpPost(Name = "PostSensor")]
-        public HttpResponseMessage PostSensor([FromBody] Sensor value)
+        // POST: api/Alert
+        [HttpPost(Name = "PostAlert")]
+        public HttpResponseMessage PostAlert([FromBody] Sensor value)
         {
-            if (value.Motion == "Intruders here")
+            const string insertString = "insert into dbo.Nødopkald2 (dato, tid, motion) values (@dato, @tid, @motion)";
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
             {
-                const string insertString = "insert into dbo.Nødopkald (dato, tid, motion) values (@dato, @tid, @motion)";
-                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                databaseConnection.Open();
+                using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
                 {
-                    databaseConnection.Open();
-                    using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
-                    {
-                        insertCommand.Parameters.AddWithValue("@dato", value.Dato);
-                        insertCommand.Parameters.AddWithValue("@tid", value.Tid);
-                        insertCommand.Parameters.AddWithValue("@motion", value.Motion);
-                        int rowsAffected = insertCommand.ExecuteNonQuery();
-                        return new HttpResponseMessage(HttpStatusCode.OK);
-                    }
+                    insertCommand.Parameters.AddWithValue("@dato", value.Dato);
+                    insertCommand.Parameters.AddWithValue("@tid", value.Tid);
+                    insertCommand.Parameters.AddWithValue("@motion", value.Motion);
+                    int rowsAffected = insertCommand.ExecuteNonQuery();
+                    return new HttpResponseMessage(HttpStatusCode.OK);
                 }
-            }
-            else
-            {
-                return new HttpResponseMessage(HttpStatusCode.OK);
             }
         }
 
-      
-
-
-        // PUT: api/Nødopkald/5
+        // PUT: api/Alert/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete]
-        public HttpResponseMessage DeleteAll()
+        [HttpDelete("{id}")]
+        public void Delete(int id)
         {
-            const string insertString = "DELETE FROM dbo.Nødopkald";
-            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
-            {
-                databaseConnection.Open();
-                using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
-                {
-                    int rowsAffected = insertCommand.ExecuteNonQuery();
-                    return new HttpResponseMessage(HttpStatusCode.OK);
-                }
-            }
         }
     }
 }
