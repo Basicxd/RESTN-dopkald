@@ -58,13 +58,6 @@ namespace RESTNødopkald.Controllers
             return sensor;
         }
 
-        //// GET: api/Alert/5
-        //[HttpGet("{id}", Name = "Get")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
         // POST: api/Alert
         [HttpPost(Name = "PostAlert")]
         public HttpResponseMessage PostAlert([FromBody] Sensor value)
@@ -91,9 +84,19 @@ namespace RESTNødopkald.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete(Name = "DeleteAlert")]
+        public HttpResponseMessage DeleteAlert(int id)
         {
+            const string insertString = "DELETE FROM dbo.Nødopkald2";
+            using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+            {
+                databaseConnection.Open();
+                using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
+                {
+                    int rowsAffected = insertCommand.ExecuteNonQuery();
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+            }
         }
     }
 }

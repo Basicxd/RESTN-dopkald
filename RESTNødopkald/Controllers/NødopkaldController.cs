@@ -19,8 +19,8 @@ namespace RESTNødopkald.Controllers
             "Server=tcp:basic1997.database.windows.net,1433;Initial Catalog=Nødopkald;Persist Security Info=False;User ID=basic;Password=Polo1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         
         // GET: api/Nødopkald
-        [HttpGet(Name = "GetAllBooks")]
-        public IEnumerable<Sensor> GetAllBooks()
+        [HttpGet(Name = "GetAllSensor")]
+        public IEnumerable<Sensor> GetAllSensor()
         {
             const string selectString = "select * from dbo.Nødopkald";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
@@ -101,8 +101,8 @@ namespace RESTNødopkald.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete]
-        public HttpResponseMessage DeleteAll()
+        [HttpDelete(Name = "DeleteSensor")]
+        public HttpResponseMessage DeleteSensor()
         {
             const string insertString = "DELETE FROM dbo.Nødopkald";
             using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
